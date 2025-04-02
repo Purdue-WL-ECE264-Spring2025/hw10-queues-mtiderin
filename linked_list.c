@@ -7,7 +7,6 @@ struct list_node *new_node(size_t value)
 {
   struct list_node *n = calloc(1, sizeof(struct list_node));
   n->value = value;
-  n->next = NULL;
   return n;
 }
 
@@ -17,6 +16,7 @@ void insert_at_head(struct linked_list *list, size_t value)
   struct list_node *n = new_node(value);
   n->next = list->head;
   n->value = value;
+  list->head = n;
 }
 
 //function to insert values to the tail of the linked list
@@ -26,12 +26,14 @@ void insert_at_tail(struct linked_list *list, size_t value)
   {
     list->head = new_node(value);
   }
-  struct list_node * p = list->head;
-  while((p->next)!=NULL)
-  {
-    p = p->next;
+  else{
+    struct list_node * p = list->head;
+    while((p->next)!=NULL)
+    {
+      p = p->next;
+    }
+    p->next = new_node(value);
   }
-  p->next = new_node(value);
 }
 
 //function to remove values from the head of the linked list
@@ -42,7 +44,7 @@ size_t remove_from_head(struct linked_list *list)
   {
     return 0;
   }
-  int value_need = 0;
+  size_t value_need = 0;
   value_need = list->head->value;
   list->head = list->head->next;
   free(q);
@@ -59,7 +61,7 @@ size_t remove_from_tail(struct linked_list *list)
   }
   if(q->next == NULL)
   {
-    int value_need = 0;
+    size_t value_need = 0;
     value_need = list->head->value;
     free(q);
     list->head = NULL;
@@ -69,7 +71,7 @@ size_t remove_from_tail(struct linked_list *list)
   {
     q = q->next;
   }
-  int value_need = q->next->value;
+  size_t value_need = q->next->value;
   free(q->next);
   q->next = NULL;
   return (value_need);

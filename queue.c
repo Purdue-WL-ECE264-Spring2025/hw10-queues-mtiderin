@@ -1,6 +1,25 @@
 #include "queue.h"
 #include "tile_game.h"
-
+bool compare_states(struct game_state current)
+{
+    //check if equal to answer?
+        int valid = 1;
+        for (int i = 0; i < 4;i++)
+        {
+            for (int j = 0; j < 4;j++)
+            {
+                if(valid == current.tiles[i][j])
+                {
+                    valid++;
+                }
+                if (valid == 16)
+                {
+                    return (true);
+                }
+            }
+        }
+        return(false);
+}
 // use list and serialize to queue, USE DEFINED SERIALIZE FUNC
 void enqueue(struct queue *q, struct game_state state) 
 {
@@ -16,56 +35,42 @@ struct game_state dequeue(struct queue *q)
 //use queue to implement a BFS to determine shortest number of moves
 int number_of_moves(struct game_state start) 
 {
-    int num = 0;
     struct queue q;
     q.data.head = NULL;
     enqueue(&q, start);
     
-    //check if equal to answer?
     while(q.data.head != NULL)
     {
         struct game_state current = dequeue(&q);
-        int valid = 1;
-        for (int i = 0; i < 4;i++)
-        {
-            for (int j = 0; j < 4;j++)
-            {
-                if(valid == current.tiles[i][j])
-                {
-                    valid++;
-                }
-                if (valid == 16)
-                {
-                    break;
-                }
-            }
-        }
         if(current.empty_row != 0)
         {
-            move_up(&current);
-            enqueue(&q, current);
-            num++;
+            struct game_state new = current;
+            move_down(&new);
+            enqueue(&q, new);
         }
         if (current.empty_row != 3)
         {
-            move_down(&current);
-            enqueue(&q, current);
-            num++;
+            struct game_state new = current;
+            move_up(&new);
+            enqueue(&q, new);
         }
         if(current.empty_col != 0)
         {
-            move_left(&current);
-            enqueue(&q, current);
-            num++;
+            struct game_state new = current;
+            move_right(&new);
+            enqueue(&q, new);
         }
         if(current.empty_col != 3)
         {
-            move_right(&current);
-            enqueue(&q, current);
-            num++;
+            struct game_state new = current;
+            move_left(&new);
+            enqueue(&q, new);
         }
-    
+        if (compare_states(current) == true)
+        {
+            free_list(q.data);
+            return (current.num_steps);
+        }
     }
-    free_list(q.data);
-    return (num);
+    return -1;
 }
