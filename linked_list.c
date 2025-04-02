@@ -38,7 +38,7 @@ void insert_at_tail(struct linked_list *list, size_t value)
 size_t remove_from_head(struct linked_list *list)
 {
   struct list_node *q = list->head;
-  if (q==NULL)
+  if (q == NULL)
   {
     return 0;
   }
@@ -58,7 +58,7 @@ size_t remove_from_tail(struct linked_list *list)
     q = q->next;
   }
   int value_need = q->value;
-  free(q);
+  //free(q);
   q = NULL;
   return (value_need);
 }
