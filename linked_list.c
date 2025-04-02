@@ -58,7 +58,7 @@ size_t remove_from_tail(struct linked_list *list)
     q = q->next;
   }
   int value_need = q->value;
-  //free(q);
+  free(q);
   q = NULL;
   return (value_need);
 }
@@ -74,6 +74,7 @@ void free_list(struct linked_list list)
     free(q);
     q = p;
   }
+  list.head = NULL;
 }
 
 // Utility function to help you debugging, do not modify!!
