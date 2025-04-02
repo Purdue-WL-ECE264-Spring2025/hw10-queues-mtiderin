@@ -24,24 +24,14 @@ bool compare_states(struct game_state current)
 void enqueue(struct queue *q, struct game_state state) 
 {
     struct list_node *p = q->data.head;
+    size_t serial_test = serialize(state);
     while(p != NULL)
     {   
-        bool flag = true;
-        struct game_state deser = deserialize(p->value);
-        for (int i = 0; i < 4; i++)
-        {
-            for (int j = 0; j < 4; j++)
+        //struct game_state deser = deserialize(p->value);
+        if (serial_test == p->value)
             {
-                if (state.tiles[i][j] != (deser.tiles[i][j]))
-                {
-                    flag = false;
-                }
+                return;
             }
-        }
-        if (flag == true)
-        {
-            return;
-        }
         p = p->next;
     }
    insert_at_tail(&q->data, (serialize(state)));
