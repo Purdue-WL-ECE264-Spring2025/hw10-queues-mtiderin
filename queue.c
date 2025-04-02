@@ -1,9 +1,9 @@
 #include "queue.h"
 #include "tile_game.h"
+
 bool compare_states(struct game_state current)
 {
-    //check if equal to answer?
-        int valid = 1;
+   int valid = 1;
         for (int i = 0; i < 4;i++)
         {
             for (int j = 0; j < 4;j++)
@@ -12,7 +12,7 @@ bool compare_states(struct game_state current)
                 {
                     valid++;
                 }
-                if (valid == 16)
+                else if (valid == 16)
                 {
                     return (true);
                 }
@@ -23,7 +23,28 @@ bool compare_states(struct game_state current)
 // use list and serialize to queue, USE DEFINED SERIALIZE FUNC
 void enqueue(struct queue *q, struct game_state state) 
 {
-    insert_at_tail(&q->data, (serialize(state)));
+    struct list_node *p = q->data.head;
+    while(p != NULL)
+    {   
+        bool flag = true;
+        struct game_state deser = deserialize(p->value);
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                if (state.tiles[i][j] != (deser.tiles[i][j]))
+                {
+                    flag = false;
+                }
+            }
+        }
+        if (flag == true)
+        {
+            return;
+        }
+        p = p->next;
+    }
+   insert_at_tail(&q->data, (serialize(state)));
 }
 
 //use list and deserialize to dequeue,  USE DEFINED DESERIALIZE FUNC
