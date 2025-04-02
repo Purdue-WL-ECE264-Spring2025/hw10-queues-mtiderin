@@ -37,14 +37,16 @@ void insert_at_tail(struct linked_list *list, size_t value)
 //function to remove values from the head of the linked list
 size_t remove_from_head(struct linked_list *list)
 {
-  struct linked_list *q = list->head;
+  struct list_node *q = list->head;
   if (q==NULL)
   {
-    return NULL;
+    return 0;
   }
+  int value_need = 0;
+  value_need = list->head->value;
   list->head = list->head->next;
   free(q);
-  return list->head;
+  return (value_need);
 }
 
 //function to remove values from the tail of the linked list
@@ -55,17 +57,20 @@ size_t remove_from_tail(struct linked_list *list)
   {
     q = q->next;
   }
+  int value_need = q->value;
   free(q);
-  return (list->head);
+  q = NULL;
+  return (value_need);
 }
 
 //function to free linked lists, must implement myself
-void free_list(struct linked_list *list) //HAD TO ADD *
+void free_list(struct linked_list list) 
 {
-  struct list_node * q= list->head;
+  struct list_node *p;
+  struct list_node * q= list.head;
   while(q != NULL)
   {
-    struct linked_list *p = q->next;
+    p = q->next;
     free(q);
     q = p;
   }

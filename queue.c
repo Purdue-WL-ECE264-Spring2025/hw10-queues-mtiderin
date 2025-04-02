@@ -2,10 +2,75 @@
 #include "tile_game.h"
 
 // use list and serialize to queue, USE DEFINED SERIALIZE FUNC
-void enqueue(struct queue *q, struct game_state state) {}
+void enqueue(struct queue *q, struct game_state state) 
+{
+    insert_at_tail(&q->data, (serialize(state)));
+}
 
 //use list and deserialize to dequeue,  USE DEFINED DESERIALIZE FUNC
-struct game_state dequeue(struct queue *q) { return (struct game_state){0}; }
+struct game_state dequeue(struct queue *q)
+{
+    return (deserialize(remove_from_head(&q->data)));
+}
 
 //use queue to implement a BFS to determine shortest number of moves
-int number_of_moves(struct game_state start) { return 0; }
+int number_of_moves(struct game_state start) 
+{
+    int num = 0;
+    struct queue q;
+    enqueue(&q, start);
+
+    while(q.data.head != NULL)
+    {
+        dequeue(&q);
+        if(start.empty_row != 0)
+        {
+            move_up(&start);
+            enqueue(&q, start);
+            num++;
+        }
+        if (start.empty_row != 3)
+        {
+            move_down(&start);
+            enqueue(&q, start);
+            num++;
+        }
+        if(start.empty_col != 0)
+        {
+            move_left(&start);
+            enqueue(&q, start);
+            num++;
+        }
+        if(start.empty_col != 3)
+        {
+            move_down(&start);
+            enqueue(&q, start);
+            num++;
+        }
+        //check if equal to answer?
+        //+---+---+---+---+
+        //| 1 | 2 | 3 | 4 |
+        //| 5 | 6 | 7 | 8 |
+        //| 9 | 10| 11| 12|
+        //| 13| 14| 15|   |
+        //+---+---+---+---+
+        // break
+        int valid = 1;
+        for (int i = 0; i < 4;i++)
+        {
+            for (int j = 0; j < 4;j++)
+            {
+                if(valid == start.tiles[i][j])
+                {
+                    valid++;
+                }
+                if (valid == 16)
+                {
+                    break;
+                }
+            }
+        }
+    }
+    free_list(q.data);
+    return (num);
+}
