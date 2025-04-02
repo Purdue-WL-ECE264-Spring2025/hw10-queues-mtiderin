@@ -18,11 +18,28 @@ int number_of_moves(struct game_state start)
 {
     int num = 0;
     struct queue q;
+    q.data.head = NULL;
     enqueue(&q, start);
-
+    
+    //check if equal to answer?
     while(q.data.head != NULL)
     {
         struct game_state current = dequeue(&q);
+        int valid = 1;
+        for (int i = 0; i < 4;i++)
+        {
+            for (int j = 0; j < 4;j++)
+            {
+                if(valid == current.tiles[i][j])
+                {
+                    valid++;
+                }
+                if (valid == 16)
+                {
+                    break;
+                }
+            }
+        }
         if(current.empty_row != 0)
         {
             move_up(&current);
@@ -43,26 +60,11 @@ int number_of_moves(struct game_state start)
         }
         if(current.empty_col != 3)
         {
-            move_down(&current);
+            move_right(&current);
             enqueue(&q, current);
             num++;
         }
-        //check if equal to answer?
-        int valid = 1;
-        for (int i = 0; i < 4;i++)
-        {
-            for (int j = 0; j < 4;j++)
-            {
-                if(valid == current.tiles[i][j])
-                {
-                    valid++;
-                }
-                if (valid == 16)
-                {
-                    break;
-                }
-            }
-        }
+    
     }
     free_list(q.data);
     return (num);
