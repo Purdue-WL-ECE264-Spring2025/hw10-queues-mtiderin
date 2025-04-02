@@ -22,29 +22,29 @@ int number_of_moves(struct game_state start)
 
     while(q.data.head != NULL)
     {
-        dequeue(&q);
-        if(start.empty_row != 0)
+        struct game_state current = dequeue(&q);
+        if(current.empty_row != 0)
         {
-            move_up(&start);
-            enqueue(&q, start);
+            move_up(&current);
+            enqueue(&q, current);
             num++;
         }
-        if (start.empty_row != 3)
+        if (current.empty_row != 3)
         {
-            move_down(&start);
-            enqueue(&q, start);
+            move_down(&current);
+            enqueue(&q, current);
             num++;
         }
-        if(start.empty_col != 0)
+        if(current.empty_col != 0)
         {
-            move_left(&start);
-            enqueue(&q, start);
+            move_left(&current);
+            enqueue(&q, current);
             num++;
         }
-        if(start.empty_col != 3)
+        if(current.empty_col != 3)
         {
-            move_down(&start);
-            enqueue(&q, start);
+            move_down(&current);
+            enqueue(&q, current);
             num++;
         }
         //check if equal to answer?
@@ -60,7 +60,7 @@ int number_of_moves(struct game_state start)
         {
             for (int j = 0; j < 4;j++)
             {
-                if(valid == start.tiles[i][j])
+                if(valid == current.tiles[i][j])
                 {
                     valid++;
                 }
